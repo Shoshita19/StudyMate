@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMate | Student Planner</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <h2 class="brand">☀ StudyMate</h2>
+        <p class="muted">YOUR STUDY SPACE</p>
+
+        <nav id="navigation">
+            <button class="nav-link active" data-view="dashboard">⌂ Dashboard</button>
+            <button class="nav-link" data-view="tasks">☷ My Tasks</button>
+            <button class="nav-link" data-view="calendar">▦ Calendar</button>
+            <button class="nav-link" data-view="timetable">◷ Timetable</button>
+            <button class="nav-link" data-view="sessions">◎ Study Sessions</button>
+            <button class="nav-link" data-view="notes">▤ Subject Notes</button>
+            <button class="nav-link" data-view="timer">◴ Study Timer</button>
+            <button class="nav-link" data-view="profile">♙ Student Profile</button>
+            <button class="nav-link" data-view="settings">⚙ Settings</button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p class="muted">Small steps every day.</p>
+            <strong>You've got this! ✨</strong>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <p class="muted">YOUR PERSONAL STUDY COMPANION</p>
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <button class="button secondary" id="theme-toggle">
+                ◐ Change Theme
+            </button>
+        </header>
+
+        <section class="view active" id="dashboard">
+            <div class="welcome">
+                <div>
+                    <p class="eyebrow">A FRESH DAY, A FRESH START</p>
+                    <h2 id="welcome-name">Hello, Student! 👋</h2>
+                    <p>Make a plan, take a breath, and get things done.</p>
+                </div>
+                <button class="button" data-go="tasks">+ Add a task</button>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <span>Total Tasks</span>
+                    <strong id="total-tasks">0</strong>
+                    <small>All your academic work</small>
+                </article>
+                <article class="stat-card">
+                    <span>Completed</span>
+                    <strong id="completed-tasks">0</strong>
+                    <small>Tasks finished</small>
+                </article>
+                <article class="stat-card">
+                    <span>Pending</span>
+                    <strong id="pending-tasks">0</strong>
+                    <small>Still to work on</small>
+                </article>
+                <article class="stat-card">
+                    <span>Overdue</span>
+                    <strong id="overdue-tasks">0</strong>
+                    <small>Past-due pending tasks</small>
+                </article>
+            </div>
+
+            <div class="panel progress-panel">
+                <div class="section-heading">
+                    <div>
+                        <h3>Overall Progress</h3>
+                        <p class="muted">Every completed task counts.</p>
+                    </div>
+                    <strong id="progress-label">0%</strong>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="panel">
+                    <div class="section-heading">
+                        <h3>Today's Overview</h3>
+                        <span id="today-date" class="pill"></span>
+                    </div>
+                    <div id="today-list" class="item-list"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="section-heading">
+                        <h3>Daily Study Goal</h3>
+                        <button class="text-button" data-go="timer">Study now →</button>
+                    </div>
+                    <p class="muted">Your daily target</p>
+                    <h2 id="goal-hours">2 hours</h2>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="goal-fill"></div>
+                    </div>
+                    <p id="goal-message" class="muted">Keep building your study habit.</p>
+                    <p id="study-minutes">0 minutes studied today</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="section-heading">
+                    <h3>Upcoming Deadlines</h3>
+                    <button class="text-button" data-go="tasks">View tasks →</button>
+                </div>
+                <div id="upcoming-list" class="item-list"></div>
+            </div>
+        </section>
+
+        <section class="view" id="tasks">
+            <div class="panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>My Tasks</h2>
+                        <p class="muted">Create, organize, and update your academic work.</p>
+                    </div>
+                    <button class="button" id="show-task-form">+ New Task</button>
+                </div>
+
+                <form id="task-form" class="form-grid hidden">
+                    <input type="hidden" id="task-id">
+                    <label>Task title *
+                        <input id="task-title" required placeholder="e.g. Complete DBMS assignment">
+                    </label>
+                    <label>Subject
+                        <input id="task-subject" placeholder="e.g. DBMS">
+                    </label>
+                    <label>Task type
+                        <select id="task-type">
+                            <option>Study</option>
+                            <option>Assignment</option>
+                            <option>Exam</option>
+                            <option>Project</option>
+                            <option>Revision</option>
+                            <option>Other</option>
+                        </select>
+                    </label>
+                    <label>Deadline
+                        <input id="task-date" type="date">
+                    </label>
+                    <label>Priority
+                        <select id="task-priority">
+                            <option>Low</option>
+                            <option selected>Medium</option>
+                            <option>High</option>
+                        </select>
+                    </label>
+                    <label>Status
+                        <select id="task-status">
+                            <option>Pending</option>
+                            <option>Completed</option>
+                        </select>
+                    </label>
+                    <label class="full-width">Description
+                        <textarea id="task-description" rows="3"
+                                  placeholder="Add useful details..."></textarea>
+                    </label>
+                    <div class="form-actions full-width">
+                        <button class="button" type="submit">Save Task</button>
+                        <button class="button secondary" type="button" id="cancel-task">Cancel</button>
+                    </div>
+                </form>
+
+                <div class="toolbar">
+                    <input id="task-search" placeholder="Search tasks or subjects...">
+                    <select id="filter-status">
+                        <option value="All">All statuses</option>
+                        <option>Pending</option>
+                        <option>Completed</option>
+                    </select>
+                    <select id="filter-priority">
+                        <option value="All">All priorities</option>
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                    <select id="filter-type">
+                        <option value="All">All types</option>
+                        <option>Study</option>
+                        <option>Assignment</option>
+                        <option>Exam</option>
+                        <option>Project</option>
+                        <option>Revision</option>
+                        <option>Other</option>
+                    </select>
+                    <select id="sort-tasks">
+                        <option value="date">Sort: Deadline</option>
+                        <option value="priority">Sort: Priority</option>
+                        <option value="title">Sort: Title</option>
+                    </select>
+                    <button class="button secondary" id="export-tasks">Export CSV</button>
+                </div>
+                <div id="task-list" class="item-list"></div>
+            </div>
+        </section>
+
+        <section class="view" id="calendar">
+            <div class="panel">
+                <div class="section-heading">
+                    <h2>Calendar View</h2>
+                    <div class="calendar-controls">
+                        <button class="button secondary" id="prev-month">←</button>
+                        <strong id="calendar-month"></strong>
+                        <button class="button secondary" id="next-month">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+                <p class="muted">Select a date to view its tasks and study sessions.</p>
+                <div id="calendar-details" class="item-list"></div>
+            </div>
+        </section>
+
+        <section class="view" id="timetable">
+            <div class="panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Study Timetable</h2>
+                        <p class="muted">Plan your regular weekly study hours.</p>
+                    </div>
+                    <button class="button" id="show-timetable-form">+ Add Slot</button>
+                </div>
+                <form id="timetable-form" class="form-grid hidden">
+                    <label>Day
+                        <select id="slot-day">
+                            <option>Monday</option><option>Tuesday</option>
+                            <option>Wednesday</option><option>Thursday</option>
+                            <option>Friday</option><option>Saturday</option>
+                            <option>Sunday</option>
+                        </select>
+                    </label>
+                    <label>Subject
+                        <input id="slot-subject" required>
+                    </label>
+                    <label>Start time
+                        <input id="slot-start" type="time" required>
+                    </label>
+                    <label>End time
+                        <input id="slot-end" type="time" required>
+                    </label>
+                    <label class="full-width">Topic
+                        <input id="slot-topic" placeholder="Chapter or topic">
+                    </label>
+                    <div class="form-actions full-width">
+                        <button class="button">Save Slot</button>
+                        <button type="button" class="button secondary" id="cancel-slot">Cancel</button>
+                    </div>
+                </form>
+                <div id="timetable-list" class="item-list"></div>
+            </div>
+        </section>
+
+        <section class="view" id="sessions">
+            <div class="panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Study Sessions</h2>
+                        <p class="muted">Plan focused study time for exams and assignments.</p>
+                    </div>
+                    <button class="button" id="show-session-form">+ Plan Session</button>
+                </div>
+                <form id="session-form" class="form-grid hidden">
+                    <label>Session title
+                        <input id="session-title" required placeholder="e.g. Java revision">
+                    </label>
+                    <label>Subject
+                        <input id="session-subject">
+                    </label>
+                    <label>Date
+                        <input id="session-date" type="date" required>
+                    </label>
+                    <label>Start time
+                        <input id="session-start" type="time">
+                    </label>
+                    <label>Duration (minutes)
+                        <input id="session-duration" type="number" min="1" value="25" required>
+                    </label>
+                    <div class="form-actions full-width">
+                        <button class="button">Save Session</button>
+                        <button type="button" class="button secondary" id="cancel-session">Cancel</button>
+                    </div>
+                </form>
+                <div id="session-list" class="item-list"></div>
+            </div>
+        </section>
+
+        <section class="view" id="notes">
+            <div class="panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Subject Notes</h2>
+                        <p class="muted">Keep important concepts and revision notes together.</p>
+                    </div>
+                    <button class="button" id="show-note-form">+ New Note</button>
+                </div>
+                <form id="note-form" class="form-grid hidden">
+                    <input type="hidden" id="note-id">
+                    <label>Note title
+                        <input id="note-title" required>
+                    </label>
+                    <label>Subject
+                        <input id="note-subject" required>
+                    </label>
+                    <label class="full-width">Content
+                        <textarea id="note-content" rows="5" required></textarea>
+                    </label>
+                    <div class="form-actions full-width">
+                        <button class="button">Save Note</button>
+                        <button type="button" class="button secondary" id="cancel-note">Cancel</button>
+                    </div>
+                </form>
+                <div id="note-list" class="notes-grid"></div>
+            </div>
+        </section>
+
+        <section class="view" id="timer">
+            <div class="panel timer-panel">
+                <p class="eyebrow">FOCUS ON ONE THING AT A TIME</p>
+                <h2>Study Timer</h2>
+                <p class="muted">Choose a focus or break session.</p>
+                <div class="timer-modes">
+                    <button class="button secondary timer-mode active" data-minutes="25">Focus · 25 min</button>
+                    <button class="button secondary timer-mode" data-minutes="5">Short break · 5 min</button>
+                    <button class="button secondary timer-mode" data-minutes="15">Long break · 15 min</button>
+                </div>
+                <div id="timer-display" class="timer-display">25:00</div>
+                <p id="timer-status" class="muted">Ready when you are.</p>
+                <div class="timer-actions">
+                    <button class="button" id="timer-start">Start</button>
+                    <button class="button secondary" id="timer-reset">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="profile">
+            <div class="panel">
+                <h2>Student Profile</h2>
+                <p class="muted">Personalize your study space and daily goal.</p>
+                <form id="profile-form" class="form-grid">
+                    <label>Your name
+                        <input id="profile-name" required>
+                    </label>
+                    <label>Course
+                        <input id="profile-course" placeholder="e.g. BTech AIML">
+                    </label>
+                    <label>Semester
+                        <input id="profile-semester" placeholder="e.g. 5th Semester">
+                    </label>
+                    <label>Daily study goal (minutes)
+                        <input id="profile-goal" type="number" min="1" value="120" required>
+                    </label>
+                    <div class="form-actions full-width">
+                        <button class="button">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="view" id="settings">
+            <div class="panel">
+                <h2>Theme Settings</h2>
+                <p class="muted">Choose the look that feels comfortable for studying.</p>
+                <div class="theme-options">
+                    <button class="button" data-theme="light">☀ Light · Cream & Orange</button>
+                    <button class="button secondary" data-theme="dark">☾ Dark · Brown & Charcoal</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>Made for your goals, one study session at a time. ☀</footer>
+    </main>
+
+    <div id="toast" role="status" class="toast hidden"></div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
