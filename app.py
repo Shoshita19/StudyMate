@@ -14,10 +14,6 @@
 
 
 
-
-
-
-
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 from pathlib import Path
